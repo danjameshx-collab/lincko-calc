@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ROI Calculator — Lincko</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0f;
+      --surface: #111118;
+      --surface2: #18181f;
+      --border: rgba(255,255,255,0.07);
+      --text: #f0f0f5;
+      --muted: #6b6b80;
+      --accent: #7c6af7;
+      --accent2: #a78bfa;
+
+      --red: #f87171;
+      --orange: #fb923c;
+      --green: #4ade80;
+      --lime: #a3e635;
+      --emerald: #34d399;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* ── OFFER TITLE ── */
+    .offer-title {
+      width: 100%;
+      max-width: 860px;
+      padding: 56px 24px 0;
+      text-align: center;
+    }
+    .offer-title .eyebrow {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent2);
+      margin-bottom: 16px;
+    }
+    .offer-title h1 {
+      font-size: clamp(26px, 5vw, 48px);
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      color: var(--text);
+    }
+    .offer-title h1 em {
+      font-style: normal;
+      background: linear-gradient(135deg, #7c6af7, #c084fc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .offer-title .sub {
+      margin-top: 16px;
+      font-size: 16px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ── MAIN CONTAINER ── */
+    .container {
+      width: 100%;
+      max-width: 860px;
+      padding: 48px 24px 80px;
+    }
+
+    .calc-label {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+    .calc-label h2 {
+      font-size: clamp(18px, 3vw, 24px);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+    .calc-label p {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+
+    .card-header {
+      padding: 20px 28px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .card-header .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+    .card-header h2 {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .card-body { padding: 28px; }
+
+    /* ── INPUTS ── */
+    .inputs-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    @media (max-width: 560px) {
+      .inputs-grid { grid-template-columns: 1fr; }
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .field label {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .field .hint {
+      font-size: 11px;
+      color: rgba(107,107,128,0.7);
+      margin-top: -4px;
+    }
+    .input-wrap { position: relative; }
+    .input-wrap .prefix {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--muted);
+      pointer-events: none;
+    }
+    .input-wrap input {
+      width: 100%;
+      padding: 14px 14px 14px 28px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      -moz-appearance: textfield;
+    }
+    .input-wrap input::-webkit-outer-spin-button,
+    .input-wrap input::-webkit-inner-spin-button { -webkit-appearance: none; }
+    .input-wrap input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(124,106,247,0.15);
+    }
+    .input-wrap input::placeholder { color: rgba(107,107,128,0.4); font-weight: 400; }
+
+    .full-width { grid-column: 1 / -1; }
+
+    /* ── SLIDER ── */
+    .slider-field { display: flex; flex-direction: column; gap: 10px; }
+    .slider-row { display: flex; align-items: center; gap: 14px; }
+    input[type="range"] {
+      flex: 1;
+      -webkit-appearance: none;
+      height: 4px;
+      border-radius: 4px;
+      background: var(--surface2);
+      outline: none;
+      cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--accent);
+      cursor: pointer;
+      box-shadow: 0 0 0 4px rgba(124,106,247,0.2);
+    }
+    .slider-val {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--accent2);
+      min-width: 32px;
+      text-align: right;
+    }
+
+    /* ── DIVIDER ── */
+    .section-divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 28px 0 20px;
+    }
+    .section-divider span {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+    .section-divider::before,
+    .section-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── MULTIPLIER HERO ── */
+    .multiplier-hero {
+      background: var(--surface2);
+      border: 2px solid var(--border);
+      border-radius: 20px;
+      padding: 36px 28px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.5s, box-shadow 0.5s;
+      margin-bottom: 24px;
+    }
+    .multiplier-hero .bg-glow {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 0.5s;
+      pointer-events: none;
+    }
+    .multiplier-hero .label {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 12px;
+      position: relative;
+    }
+    .multiplier-hero .multiplier-value {
+      font-size: clamp(60px, 12vw, 100px);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      transition: color 0.4s, text-shadow 0.4s;
+      position: relative;
+    }
+    .multiplier-hero .multiplier-suffix {
+      font-size: clamp(28px, 5vw, 44px);
+      font-weight: 900;
+      color: var(--muted);
+      transition: color 0.4s;
+    }
+    .multiplier-hero .verdict {
+      font-size: 16px;
+      font-weight: 700;
+      margin-top: 12px;
+      color: var(--muted);
+      transition: color 0.4s;
+      position: relative;
+      letter-spacing: 0.01em;
+    }
+
+    /* ── RESULTS GRID (2 cards) ── */
+    .results-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 500px) {
+      .results-grid { grid-template-columns: 1fr; }
+    }
+
+    .result-card {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px;
+      text-align: center;
+      transition: border-color 0.4s, box-shadow 0.4s;
+    }
+    .result-card .label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+    .result-card .value {
+      font-size: clamp(22px, 4vw, 30px);
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      transition: color 0.4s;
+    }
+    .result-card .sub {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    /* ── PROGRESS BAR ── */
+    .progress-wrap {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px 24px;
+    }
+    .progress-label-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .progress-label-row span {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+    }
+    .progress-label-row .prog-val {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--text);
+      transition: color 0.4s;
+    }
+    .progress-track {
+      height: 8px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .progress-bar {
+      height: 100%;
+      border-radius: 999px;
+      width: 0%;
+      transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.4s, box-shadow 0.4s;
+    }
+
+    /* ── COLOUR STATES ── */
+
+    /* < 1.5x: red */
+    .state-poor .multiplier-hero { border-color: rgba(248,113,113,0.4); box-shadow: 0 0 40px rgba(248,113,113,0.08); }
+    .state-poor .multiplier-hero .bg-glow { opacity: 1; background: radial-gradient(ellipse at 50% 0%, rgba(248,113,113,0.08) 0%, transparent 70%); }
+    .state-poor .multiplier-value, .state-poor .multiplier-suffix { color: var(--red); }
+    .state-poor .verdict { color: var(--red); }
+    .state-poor .progress-bar { background: var(--red); }
+    .state-poor .result-card.primary { border-color: rgba(248,113,113,0.3); }
+    .state-poor .result-card.primary .value { color: var(--red); }
+    .state-poor .prog-val { color: var(--red) !important; }
+
+    /* 1.5x - 2x: amber/yellow — decent */
+    .state-decent .multiplier-hero { border-color: rgba(251,191,36,0.4); box-shadow: 0 0 40px rgba(251,191,36,0.08); }
+    .state-decent .multiplier-hero .bg-glow { opacity: 1; background: radial-gradient(ellipse at 50% 0%, rgba(251,191,36,0.08) 0%, transparent 70%); }
+    .state-decent .multiplier-value, .state-decent .multiplier-suffix { color: #fbbf24; }
+    .state-decent .verdict { color: #fbbf24; }
+    .state-decent .progress-bar { background: #fbbf24; }
+    .state-decent .result-card.primary { border-color: rgba(251,191,36,0.3); }
+    .state-decent .result-card.primary .value { color: #fbbf24; }
+    .state-decent .prog-val { color: #fbbf24 !important; }
+
+    /* 2x - 3x: orange — solid */
+    .state-solid .multiplier-hero { border-color: rgba(251,146,60,0.4); box-shadow: 0 0 40px rgba(251,146,60,0.08); }
+    .state-solid .multiplier-hero .bg-glow { opacity: 1; background: radial-gradient(ellipse at 50% 0%, rgba(251,146,60,0.08) 0%, transparent 70%); }
+    .state-solid .multiplier-value, .state-solid .multiplier-suffix { color: var(--orange); }
+    .state-solid .verdict { color: var(--orange); }
+    .state-solid .progress-bar { background: var(--orange); }
+    .state-solid .result-card.primary { border-color: rgba(251,146,60,0.3); }
+    .state-solid .result-card.primary .value { color: var(--orange); }
+    .state-solid .prog-val { color: var(--orange) !important; }
+
+    /* 3x+: INCREDIBLE — emerald with full glow */
+    .state-incredible .multiplier-hero {
+      border-color: rgba(52,211,153,0.7);
+      box-shadow: 0 0 80px rgba(52,211,153,0.25), 0 0 160px rgba(52,211,153,0.1);
+    }
+    .state-incredible .multiplier-hero .bg-glow {
+      opacity: 1;
+      background: radial-gradient(ellipse at 50% 0%, rgba(52,211,153,0.18) 0%, transparent 70%);
+    }
+    .state-incredible .multiplier-value, .state-incredible .multiplier-suffix {
+      color: var(--emerald);
+      text-shadow: 0 0 40px rgba(52,211,153,0.6);
+    }
+    .state-incredible .verdict { color: var(--emerald); }
+    .state-incredible .progress-bar {
+      background: linear-gradient(90deg, var(--green), var(--emerald));
+      box-shadow: 0 0 16px rgba(52,211,153,0.5);
+    }
+    .state-incredible .result-card.primary {
+      border-color: rgba(52,211,153,0.4);
+      box-shadow: 0 0 24px rgba(52,211,153,0.1);
+    }
+    .state-incredible .result-card.primary .value {
+      color: var(--emerald);
+      text-shadow: 0 0 20px rgba(52,211,153,0.3);
+    }
+    .state-incredible .prog-val { color: var(--emerald) !important; }
+
+    /* ── FOOTER ── */
+    .footer {
+      text-align: center;
+      padding: 0 24px 40px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .footer a { color: var(--accent2); text-decoration: none; }
+    .footer a:hover { text-decoration: underline; }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .animate { animation: fadeUp 0.5s ease both; }
+    .delay-1 { animation-delay: 0.05s; }
+    .delay-2 { animation-delay: 0.1s; }
+  </style>
+</head>
+<body>
+
+  <!-- OFFER TITLE -->
+  <div class="offer-title animate">
+    <div class="eyebrow">Lincko Guarantee</div>
+    <h1>We guarantee a meeting with a <em>whale client</em><br>of your choice within 60 days<br>or you get a full refund.</h1>
+    <p class="sub">See exactly what that guarantee is worth to your business.</p>
+  </div>
+
+  <div class="container">
+
+    <div class="calc-label animate delay-1">
+      <h2>CAC → LTV Arbitrage Calculator</h2>
+      <p>See the exact return on every dollar you spend acquiring a client.</p>
+    </div>
+
+    <!-- INPUTS CARD -->
+    <div class="card animate delay-2">
+      <div class="card-header">
+        <div class="dot"></div>
+        <h2>Your Numbers</h2>
+      </div>
+      <div class="card-body">
+        <div class="inputs-grid">
+
+          <div class="field">
+            <label>Customer Acquisition Cost (CAC)</label>
+            <div class="hint">What you spend to win one client</div>
+            <div class="input-wrap">
+              <span class="prefix">$</span>
+              <input type="text" id="cac" placeholder="10,000" inputmode="numeric" />
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Lifetime Value (LTV)</label>
+            <div class="hint">Total revenue from one client</div>
+            <div class="input-wrap">
+              <span class="prefix">$</span>
+              <input type="text" id="ltv" placeholder="100,000" inputmode="numeric" />
+            </div>
+          </div>
+
+          <div class="field slider-field full-width">
+            <label>Number of Clients (per year)</label>
+            <div class="slider-row">
+              <input type="range" id="clients" min="1" max="50" value="1" />
+              <span class="slider-val" id="clients-val">1</span>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="section-divider">
+          <span>Results</span>
+        </div>
+
+        <!-- MULTIPLIER HERO -->
+        <div class="multiplier-hero" id="multiplier-hero">
+          <div class="bg-glow"></div>
+          <div class="label">Your Return on Investment</div>
+          <div>
+            <span class="multiplier-value" id="mult-value">—</span>
+            <span class="multiplier-suffix" id="mult-suffix"></span>
+          </div>
+          <div class="verdict" id="verdict">Enter your numbers above to see your return</div>
+        </div>
+
+        <!-- STATS ROW (2 cards) -->
+        <div class="results-grid">
+          <div class="result-card primary" id="card-arbitrage">
+            <div class="label">Profit Per Client</div>
+            <div class="value" id="val-arbitrage">—</div>
+            <div class="sub">LTV minus CAC</div>
+          </div>
+          <div class="result-card">
+            <div class="label">Total Annual Profit</div>
+            <div class="value" id="val-total">—</div>
+            <div class="sub" id="sub-clients">Based on 1 client</div>
+          </div>
+        </div>
+
+        <!-- ROI EFFICIENCY BAR -->
+        <div class="progress-wrap">
+          <div class="progress-label-row">
+            <span>ROI Efficiency</span>
+            <span class="prog-val" id="prog-label">—</span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-bar" id="progress-bar"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    Built for <a href="#" target="_blank">Lincko</a> · Helping you close whale clients consistently.
+  </div>
+
+  <script>
+    const cacInput     = document.getElementById('cac');
+    const ltvInput     = document.getElementById('ltv');
+    const clientSlider = document.getElementById('clients');
+    const clientsVal   = document.getElementById('clients-val');
+
+    const multValue    = document.getElementById('mult-value');
+    const multSuffix   = document.getElementById('mult-suffix');
+    const verdict      = document.getElementById('verdict');
+
+    const valArbitrage = document.getElementById('val-arbitrage');
+    const valTotal     = document.getElementById('val-total');
+    const subClients   = document.getElementById('sub-clients');
+    const progBar      = document.getElementById('progress-bar');
+    const progLabel    = document.getElementById('prog-label');
+
+    const body = document.body;
+    const stateClasses = ['state-poor', 'state-decent', 'state-solid', 'state-incredible'];
+
+    const fmt = (n) => {
+      if (Math.abs(n) >= 1_000_000) return '$' + (n / 1_000_000).toFixed(2) + 'M';
+      if (Math.abs(n) >= 1_000)    return '$' + n.toLocaleString('en-US', { maximumFractionDigits: 0 });
+      return '$' + n.toLocaleString('en-US');
+    };
+
+    // Format input with commas as user types
+    function formatInput(input) {
+      const raw = input.value.replace(/,/g, '').replace(/[^0-9]/g, '');
+      if (!raw) { input.value = ''; return; }
+      const num = parseInt(raw, 10);
+      input.value = num.toLocaleString('en-US');
+    }
+
+    // Parse comma-formatted input to number
+    function parseInput(input) {
+      return parseFloat(input.value.replace(/,/g, '')) || 0;
+    }
+
+    function setState(cls) {
+      stateClasses.forEach(c => body.classList.remove(c));
+      if (cls) body.classList.add(cls);
+    }
+
+    function calc() {
+      const cac     = parseInput(cacInput);
+      const ltv     = parseInput(ltvInput);
+      const clients = parseInt(clientSlider.value);
+
+      clientsVal.textContent = clients;
+      subClients.textContent = `Based on ${clients} client${clients === 1 ? '' : 's'}`;
+
+      if (!cac || !ltv || cac <= 0 || ltv <= 0) {
+        multValue.textContent    = '—';
+        multSuffix.textContent   = '';
+        verdict.textContent      = 'Enter your numbers above to see your return';
+        valArbitrage.textContent = '—';
+        valTotal.textContent     = '—';
+        progBar.style.width      = '0%';
+        progLabel.textContent    = '—';
+        setState(null);
+        return;
+      }
+
+      const multiplier  = ltv / cac;
+      const arbitrage   = ltv - cac;
+      const totalProfit = arbitrage * clients;
+
+      // Multiplier display
+      if (multiplier >= 1000) {
+        multValue.textContent = Math.round(multiplier / 1000) + 'k';
+      } else if (multiplier >= 10) {
+        multValue.textContent = Math.round(multiplier);
+      } else {
+        multValue.textContent = multiplier.toFixed(1);
+      }
+      multSuffix.textContent = 'X';
+
+      // Cards
+      valArbitrage.textContent = fmt(arbitrage);
+      valTotal.textContent     = fmt(totalProfit);
+
+      // State, verdict & progress bar
+      if (multiplier < 1.5) {
+        setState('state-poor');
+        verdict.textContent   = 'Thin margin — consider increasing LTV or reducing CAC.';
+        const pct = Math.min((multiplier / 1.5) * 30, 30);
+        progBar.style.width   = pct + '%';
+        progLabel.textContent = multiplier.toFixed(1) + 'X return';
+      } else if (multiplier < 2) {
+        setState('state-decent');
+        verdict.textContent   = 'Decent return — you\'re moving in the right direction.';
+        const pct = 30 + ((multiplier - 1.5) / 0.5) * 20;
+        progBar.style.width   = pct + '%';
+        progLabel.textContent = multiplier.toFixed(1) + 'X return';
+      } else if (multiplier < 3) {
+        setState('state-solid');
+        const rounded = multiplier.toFixed(1);
+        verdict.textContent   = `Very solid investment. For every dollar spent you are getting ${rounded}x back. Great money.`;
+        const pct = 50 + ((multiplier - 2) / 1) * 25;
+        progBar.style.width   = pct + '%';
+        progLabel.textContent = multiplier.toFixed(1) + 'X return';
+      } else {
+        setState('state-incredible');
+        verdict.textContent   = '🔥 INCREDIBLE — every dollar spent is printing money.';
+        const pct = Math.min(75 + ((multiplier - 3) / 7) * 25, 100);
+        progBar.style.width   = pct + '%';
+        progLabel.textContent = 'INCREDIBLE';
+      }
+    }
+
+    cacInput.addEventListener('input', () => { formatInput(cacInput); calc(); });
+    ltvInput.addEventListener('input', () => { formatInput(ltvInput); calc(); });
+    clientSlider.addEventListener('input', calc);
+
+    calc();
+  </script>
+</body>
+</html>
