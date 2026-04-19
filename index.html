@@ -393,15 +393,15 @@
     .state-decent .result-card.primary .value { color: #fbbf24; }
     .state-decent .prog-val { color: #fbbf24 !important; }
 
-    /* 2x - 3x: orange — solid */
-    .state-solid .multiplier-hero { border-color: rgba(251,146,60,0.4); box-shadow: 0 0 40px rgba(251,146,60,0.08); }
-    .state-solid .multiplier-hero .bg-glow { opacity: 1; background: radial-gradient(ellipse at 50% 0%, rgba(251,146,60,0.08) 0%, transparent 70%); }
-    .state-solid .multiplier-value, .state-solid .multiplier-suffix { color: var(--orange); }
-    .state-solid .verdict { color: var(--orange); }
-    .state-solid .progress-bar { background: var(--orange); }
-    .state-solid .result-card.primary { border-color: rgba(251,146,60,0.3); }
-    .state-solid .result-card.primary .value { color: var(--orange); }
-    .state-solid .prog-val { color: var(--orange) !important; }
+    /* 2x - 3x: green — solid */
+    .state-solid .multiplier-hero { border-color: rgba(134,239,172,0.45); box-shadow: 0 0 50px rgba(134,239,172,0.1); }
+    .state-solid .multiplier-hero .bg-glow { opacity: 1; background: radial-gradient(ellipse at 50% 0%, rgba(134,239,172,0.09) 0%, transparent 70%); }
+    .state-solid .multiplier-value, .state-solid .multiplier-suffix { color: #86efac; }
+    .state-solid .verdict { color: #86efac; }
+    .state-solid .progress-bar { background: linear-gradient(90deg, #4ade80, #86efac); }
+    .state-solid .result-card.primary { border-color: rgba(134,239,172,0.3); }
+    .state-solid .result-card.primary .value { color: #86efac; }
+    .state-solid .prog-val { color: #86efac !important; }
 
     /* 3x+: INCREDIBLE — emerald with full glow */
     .state-incredible .multiplier-hero {
@@ -634,30 +634,34 @@
       valArbitrage.textContent = fmt(arbitrage);
       valTotal.textContent     = fmt(totalProfit);
 
+      // Dynamic incredible rule: 2x+ AND profit per client > $50k = INCREDIBLE
+      const isIncredible = multiplier >= 3 || (multiplier >= 2 && arbitrage > 50000);
+
       // State, verdict & progress bar
       if (multiplier < 1.5) {
         setState('state-poor');
         verdict.textContent   = 'Thin margin — consider increasing LTV or reducing CAC.';
-        const pct = Math.min((multiplier / 1.5) * 30, 30);
+        const pct = Math.min((multiplier / 1.5) * 25, 25);
         progBar.style.width   = pct + '%';
         progLabel.textContent = multiplier.toFixed(1) + 'X return';
       } else if (multiplier < 2) {
         setState('state-decent');
         verdict.textContent   = 'Decent return — you\'re moving in the right direction.';
-        const pct = 30 + ((multiplier - 1.5) / 0.5) * 20;
+        const pct = 25 + ((multiplier - 1.5) / 0.5) * 20;
         progBar.style.width   = pct + '%';
         progLabel.textContent = multiplier.toFixed(1) + 'X return';
-      } else if (multiplier < 3) {
+      } else if (!isIncredible) {
         setState('state-solid');
         const rounded = multiplier.toFixed(1);
         verdict.textContent   = `Very solid investment. For every dollar spent you are getting ${rounded}x back. Great money.`;
-        const pct = 50 + ((multiplier - 2) / 1) * 25;
+        // Start at 70% at 2x, push to 80% approaching 3x
+        const pct = 70 + ((multiplier - 2) / 1) * 10;
         progBar.style.width   = pct + '%';
         progLabel.textContent = multiplier.toFixed(1) + 'X return';
       } else {
         setState('state-incredible');
         verdict.textContent   = '🔥 INCREDIBLE — every dollar spent is printing money.';
-        const pct = Math.min(75 + ((multiplier - 3) / 7) * 25, 100);
+        const pct = Math.min(80 + ((multiplier - 2) / 8) * 20, 100);
         progBar.style.width   = pct + '%';
         progLabel.textContent = 'INCREDIBLE';
       }
