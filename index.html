@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ROI Calculator — Lincko</title>
+  <title>ROI Calculator - Lincko</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
@@ -431,6 +431,63 @@
     }
     .state-incredible .prog-val { color: var(--emerald) !important; }
 
+    /* ── BENEFIT BOXES ── */
+    .benefits-section {
+      width: 100%;
+      max-width: 860px;
+      padding: 0 24px 64px;
+    }
+    .benefits-heading {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+    .benefits-heading h2 {
+      font-size: clamp(18px, 3vw, 24px);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--text);
+    }
+    .benefits-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 580px) {
+      .benefits-grid { grid-template-columns: 1fr; }
+    }
+    .benefit-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .benefit-card:hover {
+      border-color: rgba(124,106,247,0.3);
+      box-shadow: 0 0 30px rgba(124,106,247,0.06);
+    }
+    .benefit-icon {
+      font-size: 16px;
+      color: var(--accent2);
+      line-height: 1;
+    }
+    .benefit-card h3 {
+      font-size: clamp(17px, 2.2vw, 21px);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.25;
+      color: var(--text);
+    }
+    .benefit-card p {
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--muted);
+    }
+
     /* ── FOOTER ── */
     .footer {
       text-align: center;
@@ -549,6 +606,40 @@
 
   </div>
 
+  <!-- BENEFIT BOXES -->
+  <div class="benefits-section">
+    <div class="benefits-heading">
+      <h2>The Result This Has On Your Business.</h2>
+    </div>
+    <div class="benefits-grid">
+
+      <div class="benefit-card">
+        <div class="benefit-icon">✦</div>
+        <h3>Whale Clients Want To Work With You ASAP</h3>
+        <p>When prospects see the level of effort and personalisation upfront, they shift from sceptical to highly interested almost immediately. In many cases, they're already leaning towards working with you before the call even happens.</p>
+      </div>
+
+      <div class="benefit-card">
+        <div class="benefit-icon">✦</div>
+        <h3>The Best Outbound Your Prospect Has Ever Seen</h3>
+        <p>Your outreach becomes something they've genuinely never experienced before, which instantly cuts through noise and grabs attention. Instead of being ignored, it gets shared internally, discussed, and revisited because it feels unique and valuable.</p>
+      </div>
+
+      <div class="benefit-card">
+        <div class="benefit-icon">✦</div>
+        <h3>Generate Inbound Leads From Your Outbound</h3>
+        <p>Once your outreach is made public, it starts working beyond the original prospect and attracts attention from others in the market. This turns a single outbound piece into a source of unexpected inbound opportunities and conversations. Boosting your LTV even further.</p>
+      </div>
+
+      <div class="benefit-card">
+        <div class="benefit-icon">✦</div>
+        <h3>You Become The One & Only Option</h3>
+        <p>In saturated markets, most outreach looks identical, so differentiation is the deciding factor. By doing what others won't, you position yourself as the standout choice rather than just another vendor in the pile.</p>
+      </div>
+
+    </div>
+  </div>
+
   <div class="footer">
     Built for <a href="#" target="_blank">Lincko</a> · Helping you close whale clients consistently.
   </div>
@@ -640,13 +731,13 @@
       // State, verdict & progress bar
       if (multiplier < 1.5) {
         setState('state-poor');
-        verdict.textContent   = 'Thin margin — consider increasing LTV or reducing CAC.';
+        verdict.textContent   = 'Thin margin. Consider increasing LTV or reducing CAC.';
         const pct = Math.min((multiplier / 1.5) * 25, 25);
         progBar.style.width   = pct + '%';
         progLabel.textContent = multiplier.toFixed(1) + 'X return';
       } else if (multiplier < 2) {
         setState('state-decent');
-        verdict.textContent   = 'Decent return — you\'re moving in the right direction.';
+        verdict.textContent   = 'Decent return. You\'re moving in the right direction.';
         const pct = 25 + ((multiplier - 1.5) / 0.5) * 20;
         progBar.style.width   = pct + '%';
         progLabel.textContent = multiplier.toFixed(1) + 'X return';
@@ -660,7 +751,7 @@
         progLabel.textContent = multiplier.toFixed(1) + 'X return';
       } else {
         setState('state-incredible');
-        verdict.textContent   = '🔥 INCREDIBLE — every dollar spent is printing money.';
+        verdict.textContent   = 'INCREDIBLE. Every dollar spent is printing money.';
         const pct = Math.min(80 + ((multiplier - 2) / 8) * 20, 100);
         progBar.style.width   = pct + '%';
         progLabel.textContent = 'INCREDIBLE';
