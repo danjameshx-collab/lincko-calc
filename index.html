@@ -4,26 +4,27 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ROI Calculator - Lincko</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23000000'/%3E%3Ctext x='4' y='23' font-family='Arial Black,sans-serif' font-weight='900' font-size='18' fill='%23ffffff'%3EL%3C/text%3E%3Ctext x='17' y='23' font-family='Arial Black,sans-serif' font-weight='900' font-size='18' fill='%233ecf8e'%3EC%3C/text%3E%3C/svg%3E">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #0a0a0f;
-      --surface: #111118;
-      --surface2: #18181f;
-      --border: rgba(255,255,255,0.07);
-      --text: #f0f0f5;
-      --muted: #6b6b80;
-      --accent: #7c6af7;
-      --accent2: #a78bfa;
+      --bg: #090d0b;
+      --surface: #111111;
+      --surface2: #181818;
+      --border: rgba(255,255,255,0.08);
+      --text: #ffffff;
+      --muted: rgba(255,255,255,0.42);
+      --accent: #3ecf8e;
+      --accent2: #3ecf8e;
 
       --red: #f87171;
       --orange: #fb923c;
-      --green: #4ade80;
-      --lime: #a3e635;
-      --emerald: #34d399;
+      --green: #3ecf8e;
+      --lime: #2db87a;
+      --emerald: #3ecf8e;
     }
 
     html { scroll-behavior: smooth; }
@@ -62,10 +63,8 @@
     }
     .offer-title h1 em {
       font-style: normal;
-      background: linear-gradient(135deg, #7c6af7, #c084fc);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      color: #3ecf8e;
+      -webkit-text-fill-color: #3ecf8e;
     }
     .offer-title .sub {
       margin-top: 16px;
@@ -153,7 +152,7 @@
     }
     .field .hint {
       font-size: 11px;
-      color: rgba(107,107,128,0.7);
+      color: rgba(255,255,255,0.3);
       margin-top: -4px;
     }
     .input-wrap { position: relative; }
@@ -184,8 +183,8 @@
     .input-wrap input::-webkit-outer-spin-button,
     .input-wrap input::-webkit-inner-spin-button { -webkit-appearance: none; }
     .input-wrap input:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(124,106,247,0.15);
+      border-color: #3ecf8e;
+      box-shadow: 0 0 0 3px rgba(62,207,142,0.15);
     }
     .input-wrap input::placeholder { color: rgba(107,107,128,0.4); font-weight: 400; }
 
@@ -208,9 +207,9 @@
       width: 20px;
       height: 20px;
       border-radius: 50%;
-      background: var(--accent);
+      background: #3ecf8e;
       cursor: pointer;
-      box-shadow: 0 0 0 4px rgba(124,106,247,0.2);
+      box-shadow: 0 0 0 4px rgba(62,207,142,0.2);
     }
     .slider-val {
       font-size: 14px;
@@ -393,43 +392,43 @@
     .state-decent .result-card.primary .value { color: #fbbf24; }
     .state-decent .prog-val { color: #fbbf24 !important; }
 
-    /* 2x - 3x: green — solid */
-    .state-solid .multiplier-hero { border-color: rgba(134,239,172,0.45); box-shadow: 0 0 50px rgba(134,239,172,0.1); }
-    .state-solid .multiplier-hero .bg-glow { opacity: 1; background: radial-gradient(ellipse at 50% 0%, rgba(134,239,172,0.09) 0%, transparent 70%); }
-    .state-solid .multiplier-value, .state-solid .multiplier-suffix { color: #86efac; }
-    .state-solid .verdict { color: #86efac; }
-    .state-solid .progress-bar { background: linear-gradient(90deg, #4ade80, #86efac); }
-    .state-solid .result-card.primary { border-color: rgba(134,239,172,0.3); }
-    .state-solid .result-card.primary .value { color: #86efac; }
-    .state-solid .prog-val { color: #86efac !important; }
+    /* 2x - 3x: mid green — solid */
+    .state-solid .multiplier-hero { border-color: rgba(45,184,122,0.45); box-shadow: 0 0 50px rgba(45,184,122,0.1); }
+    .state-solid .multiplier-hero .bg-glow { opacity: 1; background: radial-gradient(ellipse at 50% 0%, rgba(45,184,122,0.09) 0%, transparent 70%); }
+    .state-solid .multiplier-value, .state-solid .multiplier-suffix { color: #2db87a; }
+    .state-solid .verdict { color: #2db87a; }
+    .state-solid .progress-bar { background: linear-gradient(90deg, #22a066, #2db87a); }
+    .state-solid .result-card.primary { border-color: rgba(45,184,122,0.3); }
+    .state-solid .result-card.primary .value { color: #2db87a; }
+    .state-solid .prog-val { color: #2db87a !important; }
 
-    /* 3x+: INCREDIBLE — emerald with full glow */
+    /* 3x+: INCREDIBLE — emerald green */
     .state-incredible .multiplier-hero {
-      border-color: rgba(52,211,153,0.7);
-      box-shadow: 0 0 80px rgba(52,211,153,0.25), 0 0 160px rgba(52,211,153,0.1);
+      border-color: rgba(62,207,142,0.6);
+      box-shadow: 0 0 80px rgba(62,207,142,0.2), 0 0 160px rgba(62,207,142,0.08);
     }
     .state-incredible .multiplier-hero .bg-glow {
       opacity: 1;
-      background: radial-gradient(ellipse at 50% 0%, rgba(52,211,153,0.18) 0%, transparent 70%);
+      background: radial-gradient(ellipse at 50% 0%, rgba(62,207,142,0.15) 0%, transparent 70%);
     }
     .state-incredible .multiplier-value, .state-incredible .multiplier-suffix {
-      color: var(--emerald);
-      text-shadow: 0 0 40px rgba(52,211,153,0.6);
+      color: #3ecf8e;
+      text-shadow: 0 0 40px rgba(62,207,142,0.5);
     }
-    .state-incredible .verdict { color: var(--emerald); }
+    .state-incredible .verdict { color: #3ecf8e; }
     .state-incredible .progress-bar {
-      background: linear-gradient(90deg, var(--green), var(--emerald));
-      box-shadow: 0 0 16px rgba(52,211,153,0.5);
+      background: linear-gradient(90deg, #2db87a, #3ecf8e);
+      box-shadow: 0 0 16px rgba(62,207,142,0.4);
     }
     .state-incredible .result-card.primary {
-      border-color: rgba(52,211,153,0.4);
-      box-shadow: 0 0 24px rgba(52,211,153,0.1);
+      border-color: rgba(62,207,142,0.35);
+      box-shadow: 0 0 24px rgba(62,207,142,0.08);
     }
     .state-incredible .result-card.primary .value {
-      color: var(--emerald);
-      text-shadow: 0 0 20px rgba(52,211,153,0.3);
+      color: #3ecf8e;
+      text-shadow: 0 0 20px rgba(62,207,142,0.3);
     }
-    .state-incredible .prog-val { color: var(--emerald) !important; }
+    .state-incredible .prog-val { color: #3ecf8e !important; }
 
     /* ── BENEFIT BOXES ── */
     .benefits-section {
@@ -467,12 +466,12 @@
       transition: border-color 0.2s, box-shadow 0.2s;
     }
     .benefit-card:hover {
-      border-color: rgba(124,106,247,0.3);
-      box-shadow: 0 0 30px rgba(124,106,247,0.06);
+      border-color: rgba(62,207,142,0.25);
+      box-shadow: 0 0 30px rgba(62,207,142,0.05);
     }
     .benefit-icon {
       font-size: 16px;
-      color: var(--accent2);
+      color: #3ecf8e;
       line-height: 1;
     }
     .benefit-card h3 {
