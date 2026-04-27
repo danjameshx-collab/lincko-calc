@@ -90,10 +90,11 @@
 
     /* ── OFFER TITLE ── */
     .offer-title {
-      width: 100%;
-      max-width: 860px;
-      padding: 56px 24px 0;
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 72px 24px 56px;
       text-align: center;
+      width: 100%;
     }
     .offer-title h1 {
       font-size: clamp(30px, 5.5vw, 52px);
@@ -102,6 +103,7 @@
       letter-spacing: -0.025em;
       color: #ffffff;
       margin-bottom: 28px;
+      text-transform: capitalize;
     }
     .offer-title h1 em {
       font-style: normal;
@@ -112,11 +114,11 @@
       color: #4cd97b;
     }
     .offer-title .sub {
-      margin-top: 16px;
       font-size: clamp(16px, 2.2vw, 19px);
       line-height: 1.65;
       color: rgba(220, 240, 228, 0.6);
-      line-height: 1.6;
+      max-width: 580px;
+      margin: 0 auto 52px;
     }
 
     /* ── MAIN CONTAINER ── */
@@ -589,20 +591,20 @@
         <div class="inputs-grid">
 
           <div class="field">
-            <label>Customer Acquisition Cost (CAC)</label>
-            <div class="hint">What you spend to win one client</div>
-            <div class="input-wrap">
-              <span class="prefix">$</span>
-              <input type="text" id="cac" placeholder="10,000" inputmode="numeric" />
-            </div>
-          </div>
-
-          <div class="field">
             <label>Lifetime Value (LTV)</label>
             <div class="hint">Total revenue from one client</div>
             <div class="input-wrap">
               <span class="prefix">$</span>
               <input type="text" id="ltv" placeholder="100,000" inputmode="numeric" />
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Customer Acquisition Cost (CAC)</label>
+            <div class="hint">What you spend to win one client</div>
+            <div class="input-wrap">
+              <span class="prefix">$</span>
+              <input type="text" id="cac" placeholder="10,000" inputmode="numeric" />
             </div>
           </div>
 
